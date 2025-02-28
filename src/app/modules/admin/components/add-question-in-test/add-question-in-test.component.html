@@ -1,0 +1,36 @@
+<div class="container">
+    <h2>Add Question</h2>
+  
+    <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
+      
+      <!-- Question Text -->
+      <label>Question:</label>
+      <input nz-input formControlName="questionText" placeholder="Enter question" required />
+  
+      <!-- Question Type -->
+      <label>Question Type:</label>
+      <nz-select formControlName="questionType" (ngModelChange)="updateAnswerOptions()">
+        <nz-option nzValue="TRUE_FALSE" nzLabel="True / False"></nz-option>
+        <nz-option nzValue="SINGLE_CORRECT" nzLabel="Single Correct"></nz-option>
+        <nz-option nzValue="MULTIPLE_CORRECT" nzLabel="Multiple Correct"></nz-option>
+      </nz-select>
+  
+      <!-- Answer Options -->
+      <label>Answer Options:</label>
+      <div formArrayName="answerOptions">
+        <div *ngFor="let option of answerOptions.controls; let i = index" [formGroupName]="i" class="option-group">
+          <input nz-input formControlName="optionText" [readonly]="questionForm.get('questionType')?.value === 'TRUE_FALSE'" />
+          <input type="checkbox" formControlName="isCorrect" /> Correct
+          <button *ngIf="answerOptions.length > 2 && questionForm.get('questionType')?.value !== 'TRUE_FALSE'" nz-button nzType="primary" (click)="removeAnswerOption(i)">Remove</button>
+        </div>
+      </div>
+  
+      <!-- Add Option Button (Hidden for True/False) -->
+      <button *ngIf="questionForm.get('questionType')?.value !== 'TRUE_FALSE'" nz-button nzType="dashed" (click)="addAnswerOption()">Add Option</button>
+  
+      <!-- Submit Button -->
+      <button nz-button nzType="primary" [disabled]="questionForm.invalid">Submit</button>
+  
+    </form>
+  </div>
+  
