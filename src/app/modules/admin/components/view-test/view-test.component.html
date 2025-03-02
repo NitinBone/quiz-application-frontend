@@ -1,0 +1,51 @@
+<div class="quiz-container">
+    <h2>{{ quizInfo?.title }}</h2>
+    <p><strong>Description:</strong> {{ quizInfo?.description }}</p>
+    <p><strong>Time:</strong> {{ quizInfo?.time }} minutes</p>
+  
+    <form>
+      <div *ngFor="let question of questions; let i = index" class="question-block">
+        <h4>Question {{i + 1}}: {{question.questionDto.questionText}}</h4>
+  
+        <div *ngIf="question.questionDto.questionType === 'SINGLE_CORRECT'">
+          <div *ngFor="let option of question.answerOptionDtos">
+            <label>
+              <input 
+                type="radio" 
+                name="question-{{i}}" 
+                [value]="option.id"
+                 />
+              {{option.optionText}}
+            </label>
+          </div>
+        </div>
+  
+        <div *ngIf="question.questionDto.questionType === 'MULTIPLE_CORRECT'">
+          <div *ngFor="let option of question.answerOptionDtos">
+            <label>
+                <input 
+                type="checkbox" 
+                [value]="option.id"
+               />
+            {{option.optionText}}
+            </label>
+          </div>
+        </div>
+  
+        <div *ngIf="question.questionDto.questionType === 'TRUE_FALSE'">
+          <div *ngFor="let option of question.answerOptionDtos">
+            <label>
+              <input 
+                type="radio" 
+                name="question-{{i}}" 
+                [value]="option.id"
+               />
+              {{option.optionText}}
+            </label>
+          </div>
+        </div>
+      </div>
+    
+    </form>
+  </div>
+  

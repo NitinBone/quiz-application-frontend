@@ -29,6 +29,17 @@ export class AdminService {
       responseType: 'text' // Important if your backend returns plain text like "Questions uploaded successfully!"
     });
   }
+
+  // getTestQuestion(id:number):Observable<any>{
+  //   return this.http.get(BASIC_URL + `api/quiz/${id}`);
+  // }
+
+
+  
+      getTestQuestion(id: number, userId: number): Observable<any> {
+        // console.log(BASIC_URL + `api/quiz/${id}?userId=${userId}`)
+        return this.http.get(BASIC_URL + `api/quiz/${id}?userId=${userId}`);
+    }
   
   }
   

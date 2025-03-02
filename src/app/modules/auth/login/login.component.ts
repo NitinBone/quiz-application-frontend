@@ -30,32 +30,29 @@ export class LoginComponent {
       })
     }
 
-    loginForm(){
-      this.authService.login(this.validateForm.value).subscribe(res=>{
-        this.message
-        .success(
-          `login successful`,
-          {nzDuration: 5000}
-        );
-        const user = {
-          id: res.id,
-          role:res.role
-        }
-
+    loginForm() {
+      this.authService.login(this.validateForm.value).subscribe(res => {
+        
+          const user = {
+            id: res.userId ?? null,   // if undefined, store null
+            role: res.role ?? ''   // if undefined, store empty string
+        };
+        
         UserStorageService.saveUser(user);
-        if(UserStorageService.isAdminLoggedIn()){
-          this.router.navigateByUrl('admin/dashboard')
-        }else if(UserStorageService.isUserLoggedIn()){
-          this.router.navigateByUrl('user/dashboard')
+         
+  
+          if (UserStorageService.isAdminLoggedIn()) {
+            console.log('Redirecting to Admin Dashboard');
+            this.router.navigateByUrl('admin/dashboard');
+        } else if (UserStorageService.isUserLoggedIn()) {
+            console.log('Redirecting to User Dashboard');
+            this.router.navigateByUrl('user/dashboard');
+        } else {
+            console.warn('User role not found. Cannot redirect.');
         }
-        console.log(res);
-
-      },error=>{
-        this.message
-          .error(
-            `Bad credentials`,
-            {nzDuration: 5000}
-          )
-      })
-    }
+    }, error => {
+        this.message.error(`Bad credentials`, { nzDuration: 5000 });
+    });
+  }
+  
 }

@@ -18,13 +18,10 @@ export class UserStorageService {
     return JSON.parse(localStorage.getItem(USER)); 
   }
 
-  static getUserId():string{
-    const user=this.getUser();
-    if(user == null){return '';}
-    return user.id;
-  }
-
-
+  static getUserId(): number | null {
+    const user = this.getUser();
+    return user ? user.id : null;  
+}
   
   static getUserRole():string{
     const user=this.getUser();
