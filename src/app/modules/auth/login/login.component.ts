@@ -35,7 +35,8 @@ export class LoginComponent {
         
           const user = {
             id: res.userId ?? null,   // if undefined, store null
-            role: res.role ?? ''   // if undefined, store empty string
+            role: res.role ?? '' ,  // if undefined, store empty string
+            courseId: res.course.id ?? null
         };
         
         UserStorageService.saveUser(user);

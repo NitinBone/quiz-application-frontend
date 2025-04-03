@@ -1,5 +1,12 @@
 <div class="result-container">
     <h2>Test Submitted Successfully!</h2>
 
-   
+    <div *ngIf="testResult">
+        <p><strong>Quiz:</strong> {{ testResult.quiz.title }}</p>
+        <p><strong>Total Questions:</strong> {{ testResult.totalQuestion }}</p>
+        <p><strong>Correct Answers:</strong> {{ testResult.correctAnswer }}</p>
+        <p><strong>Percentage:</strong> {{ testResult.percentage }}%</p>
+    </div>
+
+    <button (click)="goToDashboard()">Go to Dashboard</button>
 </div>

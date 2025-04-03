@@ -14,6 +14,33 @@ export class UserStorageService {
     window.localStorage.setItem(USER,JSON.stringify(user));
   }
 
+
+  // testResult = {
+  //   id: 14,
+  //   totalQuestion: 1,
+  //   correctAnswer: 0,
+  //   percentage: 0,
+  //   user: {
+  //     userId: 3,
+  //     email: "user1@gmail.com",
+  //     password: "User@123"
+  //   },
+  //   quiz: {
+  //     id: 2,
+  //     title: "Java Basics",
+  //     description: "A quiz about Java fundamentals"
+  //   }
+  // }; that type data was saved in localstorage
+
+    static saveResult(testResult: any): void {
+        localStorage.setItem('testResult', JSON.stringify(testResult));
+    }
+
+    static getResult(): any {
+        const result = localStorage.getItem('testResult');
+        return result ? JSON.parse(result) : null;
+    }
+
   static getUser():any{
     return JSON.parse(localStorage.getItem(USER)); 
   }
@@ -42,4 +69,6 @@ export class UserStorageService {
   static signOut():void{
     window.localStorage.removeItem(USER);
   }
+
+  
 }

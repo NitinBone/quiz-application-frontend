@@ -1,6 +1,15 @@
 <div class="main">
     <div nz-row>
       <div nz-col nzSpan="24" style="margin-bottom: 20px;">
+
+        <input 
+        nz-input 
+        [(ngModel)]="searchTerm" 
+        placeholder="Search for a test..." 
+        (ngModelChange)="onSearchChange($event)" 
+        style="width: 100%; margin-bottom: 20px;"
+      />
+
         <span style="margin: 20px;" *ngFor="let test of quizzes">
           <nz-card [nzBordered]="true" class="test" [nzTitle]="test.title">
             <p><strong>Time:</strong> {{ (test.time) }}</p>
@@ -9,8 +18,8 @@
             <button 
   nz-button 
   [ngClass]="test.sessionActive ? 'success' : 'danger'" 
-
->
+(click)="toggleSession(test.id)"
+ >
   {{ test.sessionActive ? 'Session Active' : 'Session Inactive' }}
 </button>
             

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -8,7 +8,9 @@ const BASIC_URL = "http://localhost:8080/";
   providedIn: 'root'
 })
 export class AdminService {
-  BASIC_URL: any;
+  getAllQuiz(searchTerm: string, page: number, size: number) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private http:HttpClient) { }
 
@@ -16,9 +18,13 @@ export class AdminService {
     return this.http.post(BASIC_URL + "api/quiz",quizDto);
   }
 
-  getAllQuiz():Observable<any>{
-    return this.http.get(BASIC_URL + "api/quiz");
-  }
+  // getAllQuiz():Observable<any>{
+  //   return this.http.get(BASIC_URL + "api/quiz");
+  // }
+
+
+  
+  
 
   addQuestion(payload: any): Observable<any> {
     return this.http.post(BASIC_URL + "api/quiz/question", payload);
@@ -40,6 +46,11 @@ export class AdminService {
         // console.log(BASIC_URL + `api/quiz/${id}?userId=${userId}`)
         return this.http.get(BASIC_URL + `api/quiz/${id}?userId=${userId}`);
     }
+
+    toggleSession(quizId: number): Observable<string> {
+      return this.http.put(`http://localhost:8080/api/quiz/toggle-session/${quizId}`, {}, { responseType: 'text' });
+  }
+  
   
   }
   

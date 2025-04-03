@@ -1,0 +1,33 @@
+.result-container {
+    text-align: center;
+    margin: 50px auto;
+    padding: 20px;
+    max-width: 500px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+    h2 {
+        color: green;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+}

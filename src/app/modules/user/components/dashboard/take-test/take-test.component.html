@@ -7,8 +7,10 @@
 <div  class="quiz-container">
     <h2>{{ quizInfo?.title }}</h2>
     <p><strong>Description:</strong> {{ quizInfo?.description }}</p>
-    <p><strong>Time:</strong> {{ quizInfo?.time }} minutes</p>
-  
+    <div *ngIf="questions.length > 0" class="timer-box">
+      Time Left: <strong>{{ formattedTime }}</strong>
+    </div>
+      
     <form>
       <div *ngFor="let question of questions; let i = index" class="question-block">
         <h4>Question {{i + 1}}: {{question.questionDto.questionText}}</h4>
@@ -51,7 +53,13 @@
           </div>
         </div>
       </div>
-      <button type="button" (click)="submitQuiz()">Submit</button>
+      <!-- <button type="button" (click)="submitQuiz()">Submit</button> -->
+       <div *ngIf="questions.length > 0 ; else noQuestions">
+          <button [disabled]="questions.length === 0" (click)="submitQuiz()">Submit</button>
+       </div>
+       <ng-template #noQuestions>
+        <p style="color: red;">There are no questions available</p>
+       </ng-template>
     </form>
   </div>
 </div>

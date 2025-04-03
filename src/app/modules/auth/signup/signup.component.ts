@@ -21,13 +21,27 @@ export class SignupComponent {
   ){}
 
   validateForm!: FormGroup;
+  courses:any[]=[];
+ ngOnInit() {
+    this.validateForm = this.fb.group({
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required]],
+      name: [null, Validators.required],
+      courseId: [null, [Validators.required]] // Capture selected course ID
+    });
 
-  ngOnInit(){
-    this.validateForm=this.fb.group({
-      email: [null,[Validators.required, Validators.email]],
-      password: [null,[Validators.required]],
-      name:[null,Validators.required]
-    })
+    this.getCourses();
+  }
+
+  getCourses(){
+    this.authService.getAllCourse().subscribe((res)=>{
+      this.courses=res;
+      console.log(this.courses);
+    },
+  (error)=>{
+    console.error("error fetching courses",error);
+  }
+  )
   }
 
   submitForm(){

@@ -30,6 +30,9 @@ export class QuizService {
     return this.http.post('http://localhost:8080/api/user/submit-test', submitTestDto);
   }
 
+  searchQuizzes(url: string): Observable<any> {
+    return this.http.get<any>(url);
+  }
 
   
 }

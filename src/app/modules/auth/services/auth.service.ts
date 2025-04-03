@@ -20,4 +20,9 @@ export class AuthService {
   login(loginRequest:any):Observable<any>{
     return this.http.post(BASIC_URL + "api/auth/login",loginRequest);
   }
+
+  getAllCourse():Observable<any>{
+        return this.http.get(BASIC_URL + "api/course");
+      }
+  
 }

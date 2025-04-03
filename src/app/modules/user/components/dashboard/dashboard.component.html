@@ -1,4 +1,14 @@
-<div class="main">
+<div  class="main">
+ <div style="display: flex; align-items: center; justify-content: center; ">
+  <input 
+  type="text"
+  nz-input
+  placeholder="Search quizzes..."
+  [formControl]="searchControl"
+  style="width: 70%; margin-bottom: 20px; "
+/>
+ </div>
+
     <div nz-row>
       <div nz-col nzSpan="24" style="margin-bottom: 20px;">
         <span style="margin: 20px;" *ngFor="let test of quizzes">
@@ -15,6 +25,16 @@
           </nz-card>
         </span>
       </div>
+    </div>
+
+
+    <div class="pagination-container" style="display: flex; align-items: center; justify-content: center;" >
+      <nz-pagination 
+        [nzPageSize]="pageSize"
+        [nzTotal]="totalElements"
+        [(nzPageIndex)]="currentPage"
+        (nzPageIndexChange)="onPageChange($event)">
+      </nz-pagination>
     </div>
   </div>
   

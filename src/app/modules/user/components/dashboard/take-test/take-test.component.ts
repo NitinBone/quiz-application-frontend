@@ -21,6 +21,10 @@ export class TakeTestComponent {
   selectedAnswers: { [key: number]: any } = {}; // Store user selections
   userId: number | null = null;  // Use number or 
 
+  //for time
+  quizDurationMinutes = 30;   // Default time (can be overridden if your quiz DTO has a time field)
+  timeLeftInSeconds!: number;
+  timerInterval: any;
 
   constructor(private quizService:QuizService,
     private activatedRoute:ActivatedRoute,
@@ -43,6 +47,11 @@ export class TakeTestComponent {
             this.errorOccur=false;
               this.quizInfo = res.quizDto;
               this.questions = res.addQuestionDtos;
+
+              if (this.quizInfo.duration) {
+                this.quizDurationMinutes = this.quizInfo.duration;
+              }
+              this.startTimer();
           },
           error: (err) => {
               console.error('ERROR', err);  // This logs the full error object (not just the message)
@@ -64,12 +73,44 @@ export class TakeTestComponent {
     
   }
 
+  startTimer() {
+    this.timeLeftInSeconds = this.quizDurationMinutes * 60;
+
+    this.timerInterval = setInterval(() => {
+      if (this.timeLeftInSeconds > 0) {
+        this.timeLeftInSeconds--;
+      } else {
+        clearInterval(this.timerInterval);
+        alert('Time is up! Your test is being submitted automatically.');
+        this.submitQuiz();  // Auto-submit when timer runs out
+      }
+    }, 1000);
+  }
   
+  get formattedTime(): string {
+    const minutes = Math.floor(this.timeLeftInSeconds / 60);
+    const seconds = this.timeLeftInSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
+
+
   selectAnswer(questionId: number, optionId: number) {
     this.selectedAnswers[questionId] = [optionId]; // For SINGLE and TRUE/FALSE (only one answer allowed)
   }
 
   submitQuiz() {
+
+     // Check if all questions are answered
+  const unansweredQuestions = this.questions.filter(question => 
+    !this.selectedAnswers[question.questionDto.id] || 
+    this.selectedAnswers[question.questionDto.id].length === 0
+  );
+
+  if (unansweredQuestions.length > 0) {
+    alert('Please answer all questions before submitting the test.');
+    return; // Stop the submission process
+  }
+    
     const submitTestDto = {
       quizId: this.testId,   // testId already fetched in ngOnInit
       userId: this.userId,   // Fetched in ngOnInit
@@ -77,9 +118,30 @@ export class TakeTestComponent {
     };
   
     this.quizService.submitTest(submitTestDto).subscribe({
-      next: (response) => {
+      next: (response:any) => {
         console.log('Test submitted successfully', response);
         alert('Test submitted successfully!');
+    
+        
+        const testResult = {
+          id: response.id ?? null,
+          totalQuestion: response.totalQuestion ?? 0,
+          correctAnswer: response.correctAnswer ?? 0,
+          percentage: response.percentage ?? 0,
+          user: {
+              id: response.user?.userId ?? null,
+              role: response.user?.role ?? ''
+          },
+          quiz: {
+              id: response.quiz?.id ?? 0,
+              title: response.quiz?.title ?? '',
+              description: response.quiz?.description ?? ''
+          }
+      };
+
+      UserStorageService.saveResult(testResult);   // Save to storage
+  
+
         this.router.navigate(['/user/test-submitted']);   // Navigate to "test-submitted" page (create this component)
       },
       error: (error) => {
@@ -113,5 +175,12 @@ toggleMultipleAnswer(questionId: number, optionId: number, isChecked: boolean) {
 
 getChecked(event: Event): boolean {
   return (event.target as HTMLInputElement).checked;
+}
+
+
+ngOnDestroy() {
+  if (this.timerInterval) {
+    clearInterval(this.timerInterval);  // Clean up timer when leaving page
+  }
 }
 }

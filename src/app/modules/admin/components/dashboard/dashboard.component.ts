@@ -12,8 +12,13 @@ import { AdminService } from '../../services/admin.service';
 })
 export class DashboardComponent {
 
+  searchTest: string ='';
+  filteredQuizzes = [];
   quizzes= [];
   selectedFile: File | null = null;   // For Excel file upload
+searchTerm: string = '';  // To store user input for search
+page: number = 0;
+size: number = 5;
 
   constructor(private notification: NzNotificationService,
     private quiService:AdminService
@@ -23,20 +28,48 @@ export class DashboardComponent {
     this.getAllQuizzes();
   }
 
-  getAllQuizzes(){
-    this.quiService.getAllQuiz().subscribe(res=>{
-      this.quizzes=res;
-      console.log('res'+res);
-      console.log('quiz'+this.quizzes);
-    },error=>{
-      this.notification
-      .error(
-        `ERROR`,
-        `Something went wrong. try Again`,
-        {nzDuration: 5000}
-      )
-    })
+  // getAllQuizzes(){
+  //   this.quiService.getAllQuiz().subscribe(res=>{
+  //     this.quizzes=res;
+  //   },error=>{
+  //     this.notification
+  //     .error(
+  //       `ERROR`,
+  //       `Something went wrong. try Again`,
+  //       {nzDuration: 5000}
+  //     )
+  //   })
+  // }
+
+  // filterQuizzes() {
+  //   if (!this.searchTest) {
+  //     this.filteredQuizzes = [...this.quizzes]; // Show all if empty
+  //   } else {
+  //     this.filteredQuizzes = this.quizzes.filter(test =>
+  //       test.title.toLowerCase().includes(this.searchTest.toLowerCase())
+  //     );
+  //   }
+  // }
+
+  // Fetch quizzes with search and pagination
+  getAllQuizzes() {
+    // this.quiService.getAllQuiz(this.searchTerm, this.page, this.size).subscribe({
+    //   next: (res) => {
+    //     this.quizzes = res.content;
+    //   },
+    //   error: () => {
+    //     this.notification.error(`ERROR`, `Something went wrong. Try again.`, { nzDuration: 5000 });
+    //   }
+    // });
   }
+
+// Handle search input change
+onSearchChange(value: string) {
+  this.searchTerm = value;
+  this.page = 0;  // Reset to first page
+  this.getAllQuizzes();  // Fetch filtered data
+}
+
 
   getFormattedTime(time): string{
     const minutes= Math.floor(time/60);
@@ -44,9 +77,22 @@ export class DashboardComponent {
     return `${minutes} minutes ${seconds} seconds`;
   }
 
-  toggleSession(test: any) {
-    test.sessionActive = !test.sessionActive; // Toggle status
-  }
+toggleSession(quizId: number) {
+    this.quiService.toggleSession(quizId).subscribe({
+        next: (message) => {
+            console.log(message);
+            alert(message); // This will show "Quiz session status updated to false"
+            this.getAllQuizzes();
+        },
+        error: (err) => {
+            console.error('Failed to change status', err);
+            alert('Failed to change status. Please try again.');
+        }
+    });
+}
+
+
+
   copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
       alert('Copied to clipboard!');
